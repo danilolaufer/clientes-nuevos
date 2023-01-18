@@ -83,7 +83,7 @@ function takeUserData() {
 
 //FUNCION PARA ACTUALIZAR PEDIDO
 function updateOrder(clean) {
-    if (clean === "clean") {orderList.innerHTML = ""};
+    if (clean === "clean") {orderList.innerHTML = "https://github.com/danilolaufer/clientes-nuevos.git"};
     order = [];
     form.innerHTML = '<input type="hidden" name="_next" value=""><input type="hidden" name="_captcha" value="false">'; 
     let listItems = document.querySelectorAll(".list-group-item");
