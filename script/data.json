@@ -1,0 +1,142 @@
+[
+    {
+        "type": "Frutas",
+        "description": "Frutillas",
+        "price": 1590,
+        "available": false,
+        "source": "images/frutilla.jpg"
+    },
+    {
+        "type": "Frutas",
+        "description": "Naranja de jugo",
+        "price": 1600,
+        "available": true,
+        "source": "images/naranja.jpg"
+    },
+    {
+        "type": "Frutas",
+        "description": "Durazno",
+        "price": 990,
+        "available": true,
+        "source": "images/durazno.jpeg"
+    },
+    {
+        "type": "Frutas",
+        "description": "Pera premium",
+        "price": 1200,
+        "available": true,
+        "source": "images/pera.jpg"
+    },
+    {
+        "type": "Frutas",
+        "description": "Manazana premium",
+        "price": 1650,
+        "available": true,
+        "source": "images/manzana.jpg"
+    },
+    {
+        "type": "Verduras",
+        "description": "Papa Negra",
+        "price": 1750,
+        "available": true,
+        "source": "images/papa negra.jpg"
+    },
+    {
+        "type": "Verduras",
+        "description": "Pepino",
+        "price": 1350,
+        "available": true,
+        "source": "images/pepino.jpg"
+    },
+    {
+        "type": "Verduras",
+        "description": "Cebolla premium",
+        "price": 1650,
+        "available": true,
+        "source": "images/cebolla.png"
+    },
+    {
+        "type": "Verduras",
+        "description": "Zanahoria premium",
+        "price": 1400,
+        "available": true,
+        "source": "images/zanahorias.jpg"
+    },
+    {
+        "type": "Verduras",
+        "description": "Verdeo",
+        "price": 1650,
+        "available": true,
+        "source": "images/verdeo.jpg"
+    },
+    {
+        "type": "Productos",
+        "description": "Jugo de arandano",
+        "price": 790,
+        "available": true,
+        "source": "images/jugodearandano.jpg"
+    },
+    {
+        "type": "Productos",
+        "description": "Miel 1kg",
+        "price": 500,
+        "available": true,
+        "source": "images/mielkg.jpg"
+    },
+    {
+        "type": "Productos",
+        "description": "Frasco pepino dulce",
+        "price": 520,
+        "available": true,
+        "source": "images/frascopepino.jpg"
+    },
+    {
+        "type": "Productos",
+        "description": "Ensalada de frutas",
+        "price": 590,
+        "available": true,
+        "source": "images/ensalada.jpg"
+    },
+    {
+        "type": "Productos",
+        "description": "Arandano",
+        "price": 560,
+        "available": false,
+        "source": "images/arandano.jpg"
+    },
+    {
+        "type": "Huevos",
+        "description": "Huevo Blanco Grandes",
+        "price": 210,
+        "available": true,
+        "source": "images/huevosblancosgrandes.jpg"
+    },
+    {
+        "type": "Huevos",
+        "description": "Huevos Blancos Pequeños",
+        "price": 400,
+        "available": true,
+        "source": "images/huevosblancospequeños.jpg"
+    },
+    {
+        "type": "Huevos",
+        "description": "Huevos de Campo Grandes",
+        "price": 560,
+        "available": false,
+        "source": "images/huevosdecampograndes.jpeg"
+    },
+    {
+        "type": "Huevos",
+        "description": "Huevo de Campo Pequeños",
+        "price": 1100,
+        "available": true,
+        "source": "images/huevosdecampopequeños.jpg"
+    },
+    {
+        "type": "Huevos",
+        "description": "Huevo de Codorniz",
+        "price": 900,
+        "available": true,
+        "source": "images/huevocodorniz.jpg"
+    }
+]
