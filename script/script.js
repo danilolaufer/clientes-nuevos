@@ -15,7 +15,7 @@ let menuItems,
     totalCost = document.querySelector("#total-cost"),
     front = document.querySelector("#front"),
     showMenuBtn = document.querySelector("#show-menu-btn"),
-    alert = document.querySelector("#alert"),
+    alertBox = document.querySelector("#alert"),
     settingsBtn = document.querySelector("#settings-btn"),
     logInContainer = document.querySelector("#log-in-container"),
     cancelLogInBtn = document.querySelector("#cancel-log-in-btn"),
@@ -48,15 +48,37 @@ class OrderItem {
 /* --------- */
 //FUNCIONES PARA LEVANTAR LISTA DE PRODUCTOS
 async function getData() {
-    const response = await fetch('script/data.json');
-    menuItems = await response.json();
-    createMenuAndSettings(menuItems);
+    try {
+        const response = await fetch('script/data.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        menuItems = await response.json();
+        createMenuAndSettings(menuItems);
+    } catch (error) {
+        //SUELE PASAR SI SE ABRE index.html CON DOBLE CLIC (file://) EN VEZ DE UN SERVIDOR
+        console.error("No se pudo cargar data.json", error);
+        rowEntradas.innerHTML = `<p class="text-white">No se pudieron cargar los productos. Abrí la tienda desde un servidor (ver README).</p>`;
+    }
 }
 function takeMenuItems() {
-    if (!localStorage.getItem("menuItems")) {
+    let cached = null;
+    try {
+        cached = JSON.parse(localStorage.getItem("menuItems"));
+    } catch (e) {
+        cached = null;
+    }
+    //SI EL MENU GUARDADO ES INVALIDO (EJ: CATEGORIAS VACIAS POR EL BUG ANTERIOR) SE DESCARTA
+    let isValid = Array.isArray(cached) && cached.length && cached.every(item => CATEGORIES.includes(item.type));
+    if (!isValid) {
+        localStorage.removeItem("menuItems");
         getData();
     } else {
-        menuItems = JSON.parse(localStorage.getItem("menuItems"));
+        //RENOMBRES DE IMAGENES (ESPACIOS Y Ñ EN EL NOMBRE DEL ARCHIVO)
+        const renamed = {
+            "images/papa negra.jpg": "images/papa-negra.jpg",
+            "images/huevosblancospequeños.jpg": "images/huevosblancospequenos.jpg",
+            "images/huevosdecampopequeños.jpg": "images/huevosdecampopequenos.jpg"
+        };
+        menuItems = cached.map(item => ({...item, source: renamed[item.source] || item.source}));
         createMenuAndSettings(menuItems);
     }
 }
@@ -83,15 +105,13 @@ function takeUserData() {
 
 //FUNCION PARA ACTUALIZAR PEDIDO
 function updateOrder(clean) {
-    if (clean === "clean") {orderList.innerHTML = "https://github.com/danilolaufer/clientes-nuevos/tree/main/script"};
+    if (clean === "clean") {orderList.innerHTML = ""};
     order = [];
-    form.innerHTML = '<input type="hidden" name="_next" value=""><input type="hidden" name="_captcha" value="false">'; 
-    let listItems = document.querySelectorAll(".list-group-item");
+    let listItems = orderList.querySelectorAll(".list-group-item");
     let prices = [];
-    listItems.forEach((el, index) => {
+    listItems.forEach(el => {
         order.push(new OrderItem(el.description,el.price));
         prices.push(el.price);
-        form.innerHTML += `<input class="display-none" type="text" name="${index+1} ${el.description}" value="${el.price}">`;
     });
     sessionStorage.setItem("order",JSON.stringify(order));
     counter.textContent = order.length;
@@ -106,7 +126,8 @@ function updateOrder(clean) {
 function createMenuCard(type, description, price, available, source) {
     //CREAR DIV COL. INSERTAR EN DIV ROW (VER TYPE)
     let divCol = document.createElement("div");
-    divCol.classList.add("col-12","col-sm6","col-md-4","col-lg-3");
+    //MOVIL: 2 POR FILA - TABLET: 3 - ESCRITORIO: 4
+    divCol.classList.add("col-6","col-md-4","col-lg-3","d-flex");
     switch (type) {
         case "Frutas":
             rowEntradas.appendChild(divCol);
@@ -124,7 +145,7 @@ function createMenuCard(type, description, price, available, source) {
 
     //CREAR DIV CARD. INSERTAR EN COL
     let divCard = document.createElement("div");
-    divCard.classList.add("card","mx-auto");
+    divCard.classList.add("card","product-card","mx-auto");
     divCol.appendChild(divCard);
 
     //CREAR IMG. INSERTAR EN CARD
@@ -132,6 +153,7 @@ function createMenuCard(type, description, price, available, source) {
     cardImg.classList.add("card-img-top");
     cardImg.src = source;
     cardImg.alt = description;
+    cardImg.loading = "lazy";
     divCard.appendChild(cardImg); 
 
     //CREAR DIV CARD-BODY. INSERTAR EN CARD
@@ -166,42 +188,44 @@ function createMenuCard(type, description, price, available, source) {
 }
 
 //FUNCION PARA CONSTRUIR ITEMS DE LA LISTA DE CONFIGURACION
+const CATEGORIES = ["Frutas", "Verduras", "Productos", "Huevos"];
+
+//CREA UNA COLUMNA CON ETIQUETA (VISIBLE SOLO EN MOVIL/TABLET) Y LA INSERTA EN LA FILA
+function createSettingsCol(divRow, colClasses, labelText) {
+    let divCol = document.createElement("div");
+    divCol.classList.add(...colClasses, "p-1");
+    if (labelText) {
+        let label = document.createElement("div");
+        label.classList.add("settings-label");
+        label.textContent = labelText;
+        divCol.appendChild(label);
+    }
+    divRow.appendChild(divCol);
+    return divCol;
+}
+
 function createSettingsRow(type, description, price, available, source) {
     //CREAR DIV ROW. INSERTAR EN DIV SETTINGS-LIST
     let divRow = document.createElement("div");
-    divRow.classList.add("row");
+    divRow.classList.add("row","settings-row","g-0");
     settingsList.appendChild(divRow);
 
-    //CREAR DIV COL TYPE. INSERTAR EN ROW
-    let divColType = document.createElement("div");
-    divColType.classList.add("col-1","p-1");
-    divRow.appendChild(divColType);
+    //TIPO
+    let divColType = createSettingsCol(divRow, ["col-6","col-lg-2"], "Tipo");
     let inputType = document.createElement("select");
     inputType.classList.add("form-select","type");
     inputType.disabled = true;
-    divColType.appendChild(inputType);
-    let option1 = document.createElement("option");
-    option1.value = "Entradas";
-    option1.textContent = "Entradas";
-    inputType.appendChild(option1);
-    let option2 = document.createElement("option");
-    option2.value = "Principales";
-    option2.textContent = "Principales";
-    inputType.appendChild(option2);
-    let option3 = document.createElement("option");
-    option3.value = "Postres";
-    option3.textContent = "Postres";
-    inputType.appendChild(option3);
-    let option4 = document.createElement("option");
-    option4.value = "Bebidas";
-    option4.textContent = "Bebidas";
-    inputType.appendChild(option4);
+    CATEGORIES.forEach(cat => {
+        let option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        inputType.appendChild(option);
+    });
     inputType.value = type;
-    
-    //CREAR DIV COL DESCRIPTION. INSERTAR EN ROW
-    let divColDesc = document.createElement("div");
-    divColDesc.classList.add("col-4","p-1");
-    divRow.appendChild(divColDesc);
+    divColType.appendChild(inputType);
+
+    //DESCRIPCION
+    let divColDesc = createSettingsCol(divRow, ["col-6","col-lg-3"], "Descripción");
     let inputDesc = document.createElement("input");
     inputDesc.classList.add("form-control","description");
     inputDesc.type = "text";
@@ -209,61 +233,36 @@ function createSettingsRow(type, description, price, available, source) {
     inputDesc.disabled = true;
     divColDesc.appendChild(inputDesc);
 
-    //CREAR DIV COL PRICE. INSERTAR EN ROW
-    let divColPrice = document.createElement("div");
-    divColPrice.classList.add("col-1","p-1");
-    divRow.appendChild(divColPrice);
+    //PRECIO
+    let divColPrice = createSettingsCol(divRow, ["col-4","col-lg-1"], "$");
     let inputPrice = document.createElement("input");
     inputPrice.classList.add("form-control","price");
-    inputPrice.type = "text";
+    inputPrice.type = "number";
+    inputPrice.min = "0";
     inputPrice.value = price;
     inputPrice.disabled = true;
     divColPrice.appendChild(inputPrice);
 
-    //CREAR DIV COL AVAILABLE. INSERTAR EN ROW
-    let divColAvailable = document.createElement("div");
-    divColAvailable.classList.add("col-1","p-1");
-    divRow.appendChild(divColAvailable);
+    //DISPONIBLE
+    let divColAvailable = createSettingsCol(divRow, ["col-4","col-lg-1"], "Disp.");
     let inputAvailable = document.createElement("select");
     inputAvailable.classList.add("form-select","available");
-    let optionA = document.createElement("option");
-    optionA.value = "Si";
-    optionA.textContent = "Si";
-    inputAvailable.appendChild(optionA);
-    let optionB = document.createElement("option");
-    optionB.value = "No";
-    optionB.textContent = "No";
-    inputAvailable.appendChild(optionB);
-    available ? inputAvailable.value = "Si" : inputAvailable.value = "No" ;
+    ["Si","No"].forEach(val => {
+        let option = document.createElement("option");
+        option.value = val;
+        option.textContent = val;
+        inputAvailable.appendChild(option);
+    });
+    inputAvailable.value = available ? "Si" : "No";
     inputAvailable.disabled = true;
     divColAvailable.appendChild(inputAvailable);
 
-    //CREAR DIV COL IMG. INSERTAR EN ROW
-    let divColImg = document.createElement("div");
-    divColImg.classList.add("col-3","p-1");
-    divRow.appendChild(divColImg);
-    let inputImg = document.createElement("input");
-    inputImg.classList.add("form-control","source");
-    inputImg.type = "text";
-    inputImg.value = source;
-    inputImg.disabled = true;
-    divColImg.appendChild(inputImg);
-
-    //CREAR DIV COL MODIFY. INSERTAR EN ROW
-    let divColModify = document.createElement("div");
-    divColModify.classList.add("col-2","p-1");
-    divRow.appendChild(divColModify);
+    //BOTONES MODIFICAR / ELIMINAR (EN MOVIL QUEDAN AL LADO DE PRECIO Y DISP.)
+    let divColModify = createSettingsCol(divRow, ["col-4","col-lg-2","order-lg-last","d-flex","align-items-end","justify-content-end","gap-2"]);
     let btnModify = document.createElement("button");
     btnModify.type = "button";
     btnModify.classList.add("btn","btn-secondary");
     btnModify.innerHTML = `<i class="bi bi-pencil"></i>`;
-    btnModify.addEventListener("click", () => {
-        inputType.toggleAttribute("disabled");
-        inputDesc.toggleAttribute("disabled");
-        inputPrice.toggleAttribute("disabled");
-        inputAvailable.toggleAttribute("disabled");
-        inputImg.toggleAttribute("disabled");
-    });
     divColModify.appendChild(btnModify);
     let btnRemove = document.createElement("button");
     btnRemove.type = "button";
@@ -271,6 +270,19 @@ function createSettingsRow(type, description, price, available, source) {
     btnRemove.innerHTML = `<i class="bi bi-trash"></i>`;
     btnRemove.addEventListener("click", () => divRow.remove());
     divColModify.appendChild(btnRemove);
+
+    //IMAGEN
+    let divColImg = createSettingsCol(divRow, ["col-12","col-lg-3"], "Imagen");
+    let inputImg = document.createElement("input");
+    inputImg.classList.add("form-control","source");
+    inputImg.type = "text";
+    inputImg.value = source;
+    inputImg.disabled = true;
+    divColImg.appendChild(inputImg);
+
+    btnModify.addEventListener("click", () => {
+        [inputType, inputDesc, inputPrice, inputAvailable, inputImg].forEach(input => input.toggleAttribute("disabled"));
+    });
 }
 
 //FUNCION PARA CREAR MENU Y LISTA DE CONFIGURACION
@@ -295,11 +307,12 @@ function createMenuAndSettings(products) {
                 precio = this.price
             ;
             createOrderItem (item,precio);
-            alert.innerHTML = `Agregado: <span class="fw-bold">${item}</span>`;
-            alert.classList.remove("display-none");
+            alertBox.innerHTML = `Agregado: <span class="fw-bold"></span>`;
+            alertBox.querySelector("span").textContent = item;
+            alertBox.classList.remove("display-none");
+            updateOrder();
             setTimeout(() => {
-                updateOrder();
-                alert.classList.add("display-none");
+                alertBox.classList.add("display-none");
                 showOrderBtn.classList.remove("disabled");
             },1200);
         })
@@ -310,7 +323,11 @@ function createMenuAndSettings(products) {
 function createOrderItem(item, precio) {
     //CREAR EL DIV CON LA INFO DEL PRODUCTO
     let itemContent = document.createElement("div");
-    itemContent.innerHTML = `<div class="fw-bold">${item}</div>$${precio}.-`;
+    let itemName = document.createElement("div");
+    itemName.classList.add("fw-bold");
+    itemName.textContent = item;
+    itemContent.appendChild(itemName);
+    itemContent.append(`$${precio}.-`);
     itemContent.classList.add("info-prod","ms-2","me-auto");
 
     //CREAR EL BOTON PARA REMOVER EL ITEM
@@ -401,31 +418,59 @@ homeBtn.addEventListener("click", () => showSection(front));
 showOrderBtn.addEventListener("click", () => toggleOrder());
 
 //AGREGAR FUNCIONALIDAD AL BOTON ENVIAR PEDIDO
-sendOrderBtn.addEventListener("click", () => {
-    let listItems = document.querySelectorAll(".list-group-item");
-    for (let i = 0; i < listItems.length; i++) {
-        let factor = 150;
-        let time = i*factor;
-        setTimeout(() => {
-            listItems[i].classList.add("send-item");
-            if (i == listItems.length-1) {
-                setTimeout(() => {
-                    totalCostContainer.classList.add("send-item");
-                    setTimeout(() => {
-                        Swal.fire({
-                            title: 'Pedido enviado',
-                            text: 'En caso de requerirlo puede realizar otro pedido.',
-                            icon: 'success',
-                            confirmButtonText: 'Aceptar',
-                        });
-                        console.dir(form);
-                        form.submit();
-                        updateOrder("clean");
-                    }, 300);
-                }, factor);
-            }
-        }, time);
+//ENVIA EL PEDIDO A FORMSUBMIT POR AJAX (SIN SALIR DE LA PAGINA)
+async function submitOrder() {
+    let payload = {_subject: "Nuevo pedido - Quinta Laufer", _captcha: "false"};
+    order.forEach((el, index) => {
+        payload[`${index+1}. ${el.description}`] = `$${el.price}`;
+    });
+    payload["Total"] = `$${totalCost.textContent}`;
+    //USA EL MISMO MAIL QUE EL ACTION DEL FORM, PERO POR EL ENDPOINT /ajax/
+    let url = form.action.replace("formsubmit.co/", "formsubmit.co/ajax/");
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+        body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+}
+
+let sendingOrder = false;
+sendOrderBtn.addEventListener("click", async () => {
+    if (sendingOrder || !order.length) return;
+    sendingOrder = true;
+    sendOrderBtn.classList.add("disabled");
+    try {
+        await submitOrder();
+    } catch (error) {
+        console.error(error);
+        Swal.fire({
+            title: 'No se pudo enviar el pedido',
+            text: 'Revisá tu conexión e intentá nuevamente.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+        });
+        sendingOrder = false;
+        sendOrderBtn.classList.remove("disabled");
+        return;
     }
+    let listItems = orderList.querySelectorAll(".list-group-item");
+    let factor = 150;
+    listItems.forEach((el, i) => setTimeout(() => el.classList.add("send-item"), i*factor));
+    setTimeout(() => {
+        totalCostContainer.classList.add("send-item");
+        setTimeout(() => {
+            Swal.fire({
+                title: 'Pedido enviado',
+                text: 'En caso de requerirlo puede realizar otro pedido.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+            });
+            updateOrder("clean");
+            sendingOrder = false;
+            sendOrderBtn.classList.remove("disabled");
+        }, 300);
+    }, listItems.length*factor);
 });
 
 //AGREGAR FUNCIONALIDAD AL BOTON SETTINGS
@@ -451,7 +496,9 @@ logInBtn.addEventListener("click", () => {
 });
 
 //AGREGAR FUNCIONALIDAD AL BOTON GUARDAR CAMBIOS
-saveSettingsBtn.addEventListener("click", () => {
+saveSettingsBtn.addEventListener("click", (event) => {
+    //EVITA QUE EL FORM RECARGUE LA PAGINA
+    event.preventDefault();
     let newMenuItems = [];
     let types = document.querySelectorAll(".type");
     let descriptions = document.querySelectorAll(".description");
@@ -462,7 +509,7 @@ saveSettingsBtn.addEventListener("click", () => {
         let obj = {};
         obj.type = types[i].value;
         obj.description = descriptions[i].value;
-        obj.price = parseFloat(prices[i].value);
+        obj.price = parseFloat(prices[i].value) || 0;
         availables[i].value === "Si" ? obj.available = true : obj.available = false ;
         obj.source = sources[i].value;
         newMenuItems.push(obj);

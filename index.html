@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,7 +15,7 @@
         <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
             <main class="px-3 my-auto">
                 <h1>QUINTA LAUFER</h1>
-                <H2>Frutas & Verduras</H2>
+                <h2>Frutas &amp; Verduras</h2>
                 <p class="lead">Bienvenid@</p>
                 <p class="lead">
                 <a href="#" id="show-menu-btn" class="btn btn-lg btn-light">Ver tienda</a>
@@ -23,7 +23,7 @@
             </main>
         </div>
         <!-- BOTON SETTINGS -->
-        <button id="settings-btn" type="button" class="btn btn-link position-absolute top-0 end-0 me-3 fs-5 text-white">
+        <button id="settings-btn" type="button" aria-label="Configuración" class="btn btn-link position-absolute top-0 end-0 me-3 fs-5 text-white">
             <i class="bi bi-gear"></i>
         </button>
     </div>
@@ -33,16 +33,16 @@
         <div class="col-10 col-sm-7 col-md-6 col-lg-5 position-absolute top-50 start-50 translate-middle">
             <form>
                 <div class="mb-3">
-                  <label for="user" class="form-label text-white">Usuario</label>
+                  <label for="user-input" class="form-label text-white">Usuario</label>
                   <input type="text" class="form-control" id="user-input">
                 </div>
                 <div class="mb-3">
-                  <label for="pass" class="form-label text-white">Contraseña</label>
+                  <label for="pass-input" class="form-label text-white">Contraseña</label>
                   <input type="password" class="form-control" id="pass-input">
                 </div>
                 <div class="mb-3 form-check">
                   <input type="checkbox" class="form-check-input" id="remember-check">
-                  <label class="form-check-label text-white" for="remember">Recordar mis datos</label>
+                  <label class="form-check-label text-white" for="remember-check">Recordar mis datos</label>
                 </div>
                 <button id="log-in-btn" type="button" class="btn btn-primary">Ingresar</button>
                 <button id="cancel-log-in-btn" type="button" class="btn btn-secondary ms-3">Cancelar</button>
@@ -53,32 +53,20 @@
 
     <!-- SETTINGS -->
     <div id="settings-container" class="container-fluid fixed-top vw-100 vh-100 p-2 pb-5 to-up display-none">
-        <div class="col-12 col-lg-9 m-auto">
+        <div class="col-12 col-lg-10 m-auto">
             <form>
-                <div class="row">
-                    <div class="col-1 mb-1 p-1">
-                        <p class="form-label text-white text-center">Tipo</p>
-                    </div>
-                    <div class="col-4 mb-1 p-1">
-                        <p class="form-label text-white text-center">Descripción</p>
-                    </div>
-                    <div class="col-1 mb-1 p-1">
-                        <p class="form-label text-white text-center">$</p>
-                    </div>
-                    <div class="col-1 mb-1 p-1">
-                        <p class="form-label text-white text-center">Disp.</p>
-                    </div>
-                    <div class="col-3 mb-1 p-1">
-                        <p class="form-label text-white text-center">Imagen</p>
-                    </div>
-                    <div class="col-2 mb-1 p-1">
-                        <p class="form-label text-white text-center"></p>
-                    </div>
+                <div class="row g-0 d-none d-lg-flex">
+                    <div class="col-lg-2 mb-1 p-1"><p class="form-label text-white text-center">Tipo</p></div>
+                    <div class="col-lg-3 mb-1 p-1"><p class="form-label text-white text-center">Descripción</p></div>
+                    <div class="col-lg-1 mb-1 p-1"><p class="form-label text-white text-center">$</p></div>
+                    <div class="col-lg-1 mb-1 p-1"><p class="form-label text-white text-center">Disp.</p></div>
+                    <div class="col-lg-3 mb-1 p-1"><p class="form-label text-white text-center">Imagen</p></div>
+                    <div class="col-lg-2 mb-1 p-1"></div>
                 </div>
                 <div id="settings-list">
                     <!-- AQUI SE INSERTAN LOS ITEMS PARA CONFIGURAR -->
                 </div>
-                <button id="save-settings-btn" type="submit" class="btn btn-primary">Guardar</button>
+                <button id="save-settings-btn" type="button" class="btn btn-primary">Guardar</button>
                 <button id="cancel-settings-btn" type="button" class="btn btn-secondary ms-3">Cancelar</button>
             </form>
         </div>
@@ -88,12 +76,9 @@
     <div class="container-fluid bg-dark min-vh-100">
         <nav id="nav-bar" class="navbar navbar-expand navbar-light bg-light sticky-top">
             <div class="container-fluid">
-              <a id="home-btn" class="navbar-brand"><i class="bi bi-house-door"></i></a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
+              <a id="home-btn" class="navbar-brand" href="#" aria-label="Volver a la portada"><i class="bi bi-house-door"></i></a>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto">
                   <li class="nav-item">
                     <a class="nav-link" href="#headingOne">Frutas</a>
                   </li>
@@ -117,7 +102,7 @@
                     Frutas
                     </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                     <div class="accordion-body bg-dark">
                         <div id="row-entradas" class="row gy-3">
                             <!-- AQUI SE INSERTAN LAS CARDS -->
@@ -127,11 +112,11 @@
             </div>
             <div class="accordion-item border-0">
                 <h2 class="accordion-header" id="headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     Verduras
                     </button>
                 </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                     <div class="accordion-body bg-dark">
                         <div id="row-principales" class="row gy-3">
                             <!-- AQUI SE INSERTAN LAS CARDS -->
@@ -141,11 +126,11 @@
             </div>
             <div class="accordion-item border-0">
                 <h2 class="accordion-header" id="headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
                     Productos
                     </button>
                 </h2>
-                <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
                     <div class="accordion-body bg-dark">
                         <div id="row-postres" class="row gy-3">
                             <!-- AQUI SE INSERTAN LAS CARDS -->
@@ -155,11 +140,11 @@
             </div>
             <div class="accordion-item border-0">
                 <h2 class="accordion-header" id="headingFour">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
                     Huevos
                     </button>
                 </h2>
-                <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour">
                     <div class="accordion-body bg-dark">
                         <div id="row-bebidas" class="row gy-3">
                             <!-- AQUI SE INSERTAN LAS CARDS -->
