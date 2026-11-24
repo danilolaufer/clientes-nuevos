@@ -100,14 +100,91 @@
     }
 }
 
-.card:hover {
-    animation: card-scale 1s ease;
-    animation-fill-mode: forwards;
+/* CARDS DE PRODUCTO: todas del mismo tamaño */
+.product-card {
+    width: 100%;
+    max-width: 22rem;
+    overflow: hidden;
+    transition: transform 0.4s ease;
 }
-@keyframes card-scale {
-    100% {
+.product-card .card-img-top {
+    width: 100%;
+    aspect-ratio: 4 / 3;      /* misma proporción para todas las imágenes */
+    object-fit: cover;        /* recorta sin deformar */
+    object-position: center;
+    background-color: #fff;
+}
+.product-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+.product-card .card-title {
+    min-height: 2.4em;        /* títulos de 1 o 2 líneas ocupan lo mismo */
+}
+.product-card .agregar {
+    margin-top: auto;         /* botón siempre abajo */
+}
+/* El zoom solo en dispositivos con mouse (en táctil queda "pegado") */
+@media (hover: hover) {
+    .product-card:hover {
         transform: scale(1.05);
     }
+}
+
+/* RESPONSIVE */
+#front {
+    background-position: center;
+}
+@media (max-width: 575.98px) {
+    /* móvil: 2 productos por fila, más compactos */
+    .product-card .card-body {
+        padding: 0.6rem;
+    }
+    .product-card .card-title {
+        font-size: 0.95rem;
+    }
+    .product-card .agregar {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.4rem;
+    }
+    #front h1 {
+        font-size: 2rem;
+    }
+    #front h2 {
+        font-size: 1.3rem;
+    }
+    #nav-bar .nav-link {
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Lista de configuración: en pantallas chicas cada producto en un bloque */
+.settings-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.settings-row .settings-label {
+    color: #fff;
+    font-size: 0.8rem;
+    margin-bottom: 0.15rem;
+}
+@media (min-width: 992px) {
+    .settings-row {
+        border-bottom: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    .settings-row .settings-label {
+        display: none;
+    }
+}
+
+/* Espacio inferior para que el botón flotante no tape la última card */
+#accordionExample {
+    padding-bottom: 4rem;
 }
 
 .out-item {

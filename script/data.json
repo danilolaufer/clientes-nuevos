@@ -29,7 +29,7 @@
     },
     {
         "type": "Frutas",
-        "description": "Manazana premium",
+        "description": "Manzana premium",
         "price": 1650,
         "available": true,
         "source": "images/manzana.jpg"
@@ -39,7 +39,7 @@
         "description": "Papa Negra",
         "price": 1750,
         "available": true,
-        "source": "images/papa negra.jpg"
+        "source": "images/papa-negra.jpg"
     },
     {
         "type": "Verduras",
@@ -71,7 +71,7 @@
     },
     {
         "type": "Productos",
-        "description": "Jugo de arandano",
+        "description": "Jugo de arándano",
         "price": 790,
         "available": true,
         "source": "images/jugodearandano.jpg"
@@ -99,14 +99,14 @@
     },
     {
         "type": "Productos",
-        "description": "Arandano",
+        "description": "Arándanos",
         "price": 560,
         "available": false,
         "source": "images/arandano.jpg"
     },
     {
         "type": "Huevos",
-        "description": "Huevo Blanco Grandes",
+        "description": "Huevos Blancos Grandes",
         "price": 210,
         "available": true,
         "source": "images/huevosblancosgrandes.jpg"
@@ -116,7 +116,7 @@
         "description": "Huevos Blancos Pequeños",
         "price": 400,
         "available": true,
-        "source": "images/huevosblancospequeños.jpg"
+        "source": "images/huevosblancospequenos.jpg"
     },
     {
         "type": "Huevos",
@@ -127,10 +127,10 @@
     },
     {
         "type": "Huevos",
-        "description": "Huevo de Campo Pequeños",
+        "description": "Huevos de Campo Pequeños",
         "price": 1100,
         "available": true,
-        "source": "images/huevosdecampopequeños.jpg"
+        "source": "images/huevosdecampopequenos.jpg"
     },
     {
         "type": "Huevos",
